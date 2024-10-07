@@ -1,5 +1,4 @@
-﻿using API.DTO;
-using API.Models;
+﻿using API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,17 +17,10 @@ namespace API.Controllers
 
         // GET: api/Employees
         [HttpGet]
-        public async Task<ActionResult<ApiResult<Employee>>> GetEmployees(int pageIndex = 0, int pageSize = 10, string? sortColumn = null, string? sortOrder = null, string? filterColumn = null, string? filterQuery = null)
+        [Route("All-Employees")]
+        public async Task<ActionResult<IEnumerable<Employee>>> GetEmployees()
         {
-            return await ApiResult<Employee>.CreateAsync(
-               _context.Employees.AsNoTracking(),
-               pageIndex,
-               pageSize,
-               sortColumn,
-               sortOrder,
-               filterColumn,
-               filterQuery
-               );
+            return await _context.Employees.Where(e => e.IsActive == "Yes").ToListAsync();
         }
 
 
@@ -81,6 +73,7 @@ namespace API.Controllers
         // POST: api/Employees
 
         [HttpPost]
+        [Route("Add-Employee")]
         public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
         {
             _context.Employees.Add(employee);
