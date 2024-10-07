@@ -42,7 +42,7 @@ namespace API.Controllers
         // PUT: api/Employees/5
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(int id, Employee employee)
+        public async Task<IActionResult> Update(int id, Employee employee)
         {
             if (id != employee.Id)
             {

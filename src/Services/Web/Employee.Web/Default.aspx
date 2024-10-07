@@ -17,6 +17,10 @@
 
     <script type="text/javascript">      
 
+        document.addEventListener("DOMContentLoaded", (event) => {
+            //location.reload();
+        });
+
 
         function openModal() {
             $('#basicModal').modal('show');
@@ -30,7 +34,7 @@
 
         function confirmationMessage() {
             if (confirm('Are you sure to delete ?')) {
-                return true;
+                return true;                
             } else {
                 return false;
             }
@@ -54,13 +58,20 @@
                                 <div class="col-sm-1 col-md-1">
                                     <label>Title:</label>
                                 </div>
-                                <div class="col-sm-1 col-md-1">
-                                    <asp:TextBox runat="server" ID="txtBxTitle" CssClass="form-control" type="text" MaxLength="25"></asp:TextBox>
+                                <div class="col-sm-2 col-md-2">
+                                    <asp:DropDownList runat="server" ID="txtBxTitle" CssClass="form-control" Placeholder="Select" type="text">
+                                        <asp:ListItem disabled="disabled">Please Select</asp:ListItem>
+                                        <asp:ListItem>Mr.</asp:ListItem>
+                                        <asp:ListItem>Ms</asp:ListItem>
+                                        <asp:ListItem>Mrs.</asp:ListItem>
+                                        <asp:ListItem>Dr.</asp:ListItem>
+                                        <asp:ListItem>Prof.</asp:ListItem>
+                                    </asp:DropDownList>
                                     <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Required"
                                         Display="Dynamic" ControlToValidate="txtBxTitle" ValidationGroup="vgSubmit" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div>
 
-                                <div class="col-sm-2 col-md-2">
+                                <div class="col-sm-1 col-md-1">
                                     <label>First Name:<span style="color: Red">*</span></label>
                                 </div>
                                 <div class="col-sm-3 col-md-3">
@@ -69,7 +80,7 @@
                                         Display="Dynamic" ControlToValidate="txtbxFirstname" ValidationGroup="vgSubmit" ForeColor="Red"></asp:RequiredFieldValidator>
                                 </div>
 
-                                <div class="col-sm-2 col-md-2">
+                                <div class="col-sm-1 col-md-1">
                                     <label>Last Name:</label>
                                 </div>
                                 <div class="col-sm-3 col-md-3">
@@ -132,9 +143,8 @@
             <%--GRID VIEW--%>
             <asp:UpdatePanel UpdateMode="Conditional" runat="server" ID="upGrid">
                 <ContentTemplate>
-                    <div class="table-responsive gv-container clearfix mrgntp-btm5px">
-                        <asp:GridView runat="server" ID="empListView" AutoGenerateColumns="False"
-                            CssClass="gv-table" AllowPaging="True" PageSize="9" OnPageIndexChanging="gridAll_PageIndexChanging"
+                    <div class="table-responsive gv-container clearfix mrgntp-btm5px col-sm-offset-3 col-md-offset-3 ">
+                        <asp:GridView runat="server" ID="empListView" AutoGenerateColumns="False" CssClass="gv-table" AllowPaging="True" PageSize="9" OnPageIndexChanging="gridAll_PageIndexChanging"
                             OnRowDataBound="gridAll_RowDataBound">
 
                             <Columns>
@@ -189,7 +199,7 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                <asp:TemplateField HeaderText="Delete" ItemStyle-Width="40" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center">
+                                <asp:TemplateField HeaderText="Delete" ItemStyle-Width="60" HeaderStyle-CssClass="text-center" ItemStyle-CssClass="text-center">
                                     <ItemTemplate>
                                         <asp:ImageButton ID="btnDelete" runat="server" ImageUrl="~/images/delete.png" CommandName="Delete" CssClass="text-center" OnClientClick="return confirmationMessage();"
                                             OnClick="btnDelete_OnClick" AlternateText="Delete" ToolTip="Delete Record" CausesValidation="False"
@@ -230,6 +240,9 @@
                         <ContentTemplate>
 
                             <div class="form-horizontal">
+                                <%--visible="false"--%>                                
+
+                                 <asp:TextBox runat="server" ID="txtbxUpdtId" visible="false"  CssClass="form-control"></asp:TextBox>
 
                                 <%--Ttitle--%>
                                 <div class="form-group clearfix">
@@ -271,6 +284,49 @@
                                     </div>
                                 </div>
 
+                                <%--Division--%>
+
+                                <div class="form-group clearfix">
+                                    <div class="col-sm-4 col-md-4 label-bold">
+                                        Division:<span style="color: Red">*</span>
+                                    </div>
+                                    <div class="col-sm-8 col-md-8">
+                                        <asp:TextBox runat="server" ID="txtbxUpdtDivison" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator10" runat="server" ErrorMessage="Required" ValidationGroup="modalSubmit"
+                                            Display="Dynamic" ControlToValidate="txtbxUpdtDivison" CssClass="required">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+
+                                <%--Building--%>
+
+                                <div class="form-group clearfix">
+                                    <div class="col-sm-4 col-md-4 label-bold">
+                                        Building:<span style="color: Red">*</span>
+                                    </div>
+                                    <div class="col-sm-8 col-md-8">
+                                        <asp:TextBox runat="server" ID="txtbxUpdtBuilding" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator11" runat="server" ErrorMessage="Required" ValidationGroup="modalSubmit"
+                                            Display="Dynamic" ControlToValidate="txtbxUpdtBuilding" CssClass="required">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+
+                                <%--Room--%>
+
+                                <div class="form-group clearfix">
+                                    <div class="col-sm-4 col-md-4 label-bold">
+                                        Room:<span style="color: Red">*</span>
+                                    </div>
+                                    <div class="col-sm-8 col-md-8">
+                                        <asp:TextBox runat="server" ID="txtbxUpdtRoom" CssClass="form-control" MaxLength="50"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator12" runat="server" ErrorMessage="Required" ValidationGroup="modalSubmit"
+                                            Display="Dynamic" ControlToValidate="txtbxUpdtRoom" CssClass="required">
+                                        </asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+
+                                <%--Last Row--%>
                                 <div class="form-group clearfix">
                                     <div class="col-sm-4 col-md-4 label-bold">
                                         <label>Display:</label>
@@ -299,6 +355,7 @@
 
     <%-- Script --%>
     <script type="text/javascript">
+        
 
         function SubmitMessage() {
 
@@ -345,4 +402,6 @@
 
 
 </asp:Content>
+
+
 

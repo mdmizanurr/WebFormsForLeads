@@ -22,7 +22,7 @@ public partial class _Default : Page
 
     }
 
-
+    // LOAD Emp
     protected void LoadAllEmployee()
     {
         List<EmpDTO> empList = new List<EmpDTO>();
@@ -58,7 +58,11 @@ public partial class _Default : Page
         }
 
         response = await client.PostAsJsonAsync(apiUrl + ApiAddress.AddEmployees, model);
+
         LoadAllEmployee();
+
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "ClearField();", true);
+
 
     }
 
@@ -66,7 +70,7 @@ public partial class _Default : Page
     // Clear Field 
     protected void btnClear_Click(object sender, EventArgs e)
     {
-
+        Response.Redirect(Request.RawUrl);
     }
 
 
@@ -82,15 +86,52 @@ public partial class _Default : Page
 
 
     // Update 
-    protected void btnUpdate_Click(object sender, EventArgs e)
+    protected async void btnUpdate_Click(object sender, EventArgs e)
     {
+        int id = Convert.ToInt32(txtbxUpdtId.Text);
+        EmpDTO model = new EmpDTO();
+        response = await client.GetAsync(apiUrl + ApiAddress.EmployeeEdit + id);
 
+        if (response.IsSuccessStatusCode)
+        {
+            model = response.Content.ReadAsAsync<EmpDTO>().Result;
+        }
+
+        model.Title = txtbxUpdtTitle.Text;
+        model.FirstName = txtbxUpdtFirstname.Text;
+        model.LastName = txtbxUpdtLastname.Text;
+        model.Division = txtbxUpdtDivison.Text;
+        model.Building = txtbxUpdtBuilding.Text;
+        model.Room = txtbxUpdtRoom.Text;
+        response = await client.PutAsJsonAsync(apiUrl + ApiAddress.EmployeeEdit + id, model);
+
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "closeModal();", true);
+        LoadAllEmployee();
+        upanel.Update();
+        upGrid.Update();
     }
 
     // Delete 
 
-    protected void btnDelete_OnClick(object sender, EventArgs e)
+    protected async void btnDelete_OnClick(object sender, EventArgs e)
     {
+        int id = Convert.ToInt32(((ImageButton)sender).CommandArgument);
+
+        EmpDTO model = new EmpDTO();
+        response = await client.GetAsync(apiUrl + ApiAddress.EmployeeEdit + id);
+
+        if (response.IsSuccessStatusCode)
+        {
+            model = response.Content.ReadAsAsync<EmpDTO>().Result;
+        }
+
+        model.IsActive = "No";
+        response = await client.PutAsJsonAsync(apiUrl + ApiAddress.EmployeeEdit + id, model);
+        LoadAllEmployee();
+        upanel.Update();
+        upGrid.Update();
+
+
 
     }
 
@@ -107,7 +148,7 @@ public partial class _Default : Page
         EmpDTO model = new EmpDTO();
         int id = Convert.ToInt32(((ImageButton)sender).CommandArgument);
 
-        response = await client.GetAsync(apiUrl + ApiAddress.EmployeeEdit + id);
+        response = await client.GetAsync(apiUrl + ApiAddress.EmployeeGetById + id);
 
         if (response.IsSuccessStatusCode)
         {
@@ -117,14 +158,19 @@ public partial class _Default : Page
         var title = model.Title;
         var firstName = model.FirstName;
         var lastName = model.LastName;
+        var division = model.Division;
+        var building = model.Building;
+        var room = model.Room;
 
         txtbxUpdtTitle.Text = title;
         txtbxUpdtFirstname.Text = firstName;
         txtbxUpdtLastname.Text = lastName;
+        txtbxUpdtDivison.Text = division;
+        txtbxUpdtBuilding.Text = building;
+        txtbxUpdtRoom.Text = room;
+        txtbxUpdtId.Text = id.ToString();
 
         ScriptManager.RegisterStartupScript(this, this.GetType(), "Pop", "openModal();", true);
-
-
         upanel.Update();
     }
 
